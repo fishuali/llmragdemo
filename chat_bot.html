@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with API Call</title>
+</head>
+<body>
+    <div id="chat-container">
+        <div id="chat-messages"></div>
+        <input type="text" id="user-input" placeholder="Type your message..." onfocus="this.value=''">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        function sendMessage() {
+            const userInput = document.getElementById('user-input').value;
+            displayMessage('User', userInput);
+
+            // Make API call
+            fetch('http://127.0.0.1:5000/api/call', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message: userInput })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const apiResponse = data.generated_text;
+                displayMessage('Faisal BOT', apiResponse);
+            });
+        }
+
+        function displayMessage(sender, message) {
+            const chatMessages = document.getElementById('chat-messages');
+            chatMessages.innerHTML += `<p><strong>${sender}:</strong> ${message}</p>`;
+        }
+    </script>
+</body>
+</html>
